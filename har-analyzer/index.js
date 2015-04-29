@@ -46,8 +46,6 @@ HarAnalyzer.prototype = {
                 var result = analyzer.getResult();
                 result.url = pageInfo.url;
                 var datetime = new Date(pageInfo.startedDateTime);
-                console.log(pageInfo);
-                console.log(datetime)
                 result.datetime = datetime;
                 report[analyzer.getName()] = result;
             }
