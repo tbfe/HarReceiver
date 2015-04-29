@@ -1,5 +1,3 @@
-'use strict';
-
 var fs = require('fs');
 var pathModule = require('path');
 
@@ -12,7 +10,7 @@ function loadModules(path, modules) {
     var stat = fs.lstatSync(path);
     if (stat.isDirectory()) {
         var files = fs.readdirSync(path);
-        for (let file of files) {
+        for (var file, i = 0; file = files[i]; i++) {
             var f = pathModule.join(path, file);
             loadModules(f, modules);
         }
