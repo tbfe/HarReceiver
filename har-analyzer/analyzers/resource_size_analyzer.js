@@ -17,6 +17,7 @@ ResourceSizeAnalyzer.prototype = {
     process: function (entry, extra) {
         // 如果请求fromCache，说明没有发请求，那么整个header大小应该视作为0
         var headersSize = extra.fromCache ? 0 : entry.request.headersSize + entry.response.headersSize;
+        headersSize = headersSize < 0 ? 0 : headersSize;
 
         this.result.header += headersSize;
 

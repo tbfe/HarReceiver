@@ -18,7 +18,7 @@ var REPORT_TO_MODEL_MAP = {
 router.post('/', function(req, res, next) {
     var harAnalyzer = new HarAnalyzer();
     var report = harAnalyzer.execute(req.body);
-    for (var p, i = 0; p = report[i]; i++) {
+    for (var p in report) {
         var Model = REPORT_TO_MODEL_MAP[p];
         if (Model) {
             Model.create(report[p], function (err) {
