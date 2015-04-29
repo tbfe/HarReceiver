@@ -1,4 +1,3 @@
-'use strict';
 var express = require('express');
 var router = express.Router();
 
@@ -8,7 +7,7 @@ var ImageResource = require("../models/image_source");
 var CacheHit = require("../models/cache_hit");
 
 
-const REPORT_TO_MODEL_MAP = {
+var REPORT_TO_MODEL_MAP = {
     "ResourceSizeAnalyzer": ResourceSize,
     "ImageSourceAnalyzer": ImageResource,
     "CacheHitAnalyzer": CacheHit
