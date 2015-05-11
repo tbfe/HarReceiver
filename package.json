@@ -1,5 +1,5 @@
 {
-  "name": "har_receiver",
+  "name": "har-receiver",
   "version": "0.0.0",
   "private": true,
   "scripts": {
