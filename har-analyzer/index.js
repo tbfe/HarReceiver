@@ -17,7 +17,7 @@ function HarAnalyzer() {
 HarAnalyzer.prototype = {
     /**
      * execute har analyzer
-     * @param {Object} harFile har file path
+     * @param {Object} harFile har format object
      * @returns {Object} report
      */
     execute: function (harFile) {
@@ -32,7 +32,6 @@ HarAnalyzer.prototype = {
 
         pageInfo.url = entries[0].request.url;
 
-        var report = {};
         for (var entry, i = 0; entry = entries[i]; i++) {
             // 构造扩展信息
             var extra = {};
@@ -43,12 +42,17 @@ HarAnalyzer.prototype = {
             // 进行分析
             for (var analyzer, j = 0; analyzer = analyzers[j]; j++) {
                 analyzer.process(entry, extra);
-                var result = analyzer.getResult();
-                result.url = pageInfo.url;
-                var datetime = new Date(pageInfo.startedDateTime);
-                result.datetime = datetime;
-                report[analyzer.getName()] = result;
             }
+        }
+
+        // 构造分析报告
+        var report = {};
+        var datetime = new Date(pageInfo.startedDateTime);
+        for (var analyzer, i = 0; analyzer = analyzers[i]; i++) {
+            var result = analyzer.getResult();
+            result.url = pageInfo.url;
+            result.datetime = datetime;
+            report[analyzer.getName()] = result;
         }
 
         return report;
