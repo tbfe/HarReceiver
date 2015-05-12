@@ -13,10 +13,10 @@ var REPORT_TO_MODEL_MAP = {
     "CacheHitAnalyzer": CacheHit
 };
 
+var harAnalyzer = new HarAnalyzer();
 
 /* POST users listing. */
 router.post('/', function(req, res, next) {
-    var harAnalyzer = new HarAnalyzer();
     var report = harAnalyzer.execute(req.body);
     for (var p in report) {
         var Model = REPORT_TO_MODEL_MAP[p];
@@ -24,6 +24,7 @@ router.post('/', function(req, res, next) {
             Model.create(report[p], function (err) {
                 if (err) {
                     console.log(err);
+                    res.status(500).send('Data Persistence Error: ' + err);
                 }
             });
         }

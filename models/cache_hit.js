@@ -1,17 +1,24 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var baseSchema = {
+    total     : Number,
+    r304      : Number,
+    fromCache : Number,
+    r304Header: Number
+};
+
 var cacheHitSchema = new Schema({
-    url: String,
-    datetime: Date,
-    total: Number,
-    r304: Number,
-    fromCache: Number,
+    url        : String,
+    datetime   : Date,
+    total      : Number,
+    r304       : Number,
+    fromCache  : Number,
     r304Headers: Number,
-    other: { total: Number, r304: Number, fromCache: Number, r304Header: Number },
-    js: { total: Number, r304: Number, fromCache: Number, r304Header: Number },
-    image: { total: Number, r304: Number, fromCache: Number, r304Header: Number },
-    css: { total: Number, r304: Number, fromCache: Number, r304Header: Number }
+    other      : baseSchema,
+    js         : baseSchema,
+    image      : baseSchema,
+    css        : baseSchema
 });
 
 var CacheHit = mongoose.model('CacheHit', cacheHitSchema);
