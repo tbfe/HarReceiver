@@ -1,11 +1,97 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>{{ title }}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1>{{ title }}</h1>
-    <p>Welcome to {{ title }}</p>
-  </body>
+    <meta charset="utf-8">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="/bower_components/semantic-ui/dist/semantic.css"/>
+</head>
+<body>
+<h1>Har Charts</h1>
+
+<div class="ui grid form">
+    <div class="five wide column field">
+        <select id="address">
+            <option value="http://tieba.baidu.com/f?ie=utf-8&kw=%E5%B0%8F%E7%B1%B3&fr=search">小米吧FRS</option>
+            <option value="http://tieba.baidu.com/f?ie=utf-8&kw=%E6%9D%8E%E6%AF%85">李毅吧FRS</option>
+            <option value="http://tieba.baidu.com/p/3740851215">普通吧PB页</option>
+            <option value="http://tieba.baidu.com/">贴吧首页</option>
+        </select>
+    </div>
+    <div class="three wide column field">
+        <select id="dataType">
+            <option value="ResourceSize">资源大小</option>
+            <option value="ImageResource">图片资源</option>
+            <option value="CacheHit">缓存命中</option>
+        </select>
+    </div>
+    <div class="three wide column field">
+        <input type="date" id="start" />
+    </div>
+    <div class="three wide column field">
+        <input type="date" id="end" />
+    </div>
+    <div class="two wide column">
+        <button type="button" class="ui button primary" id="search">查询</button>
+    </div>
+    <div class="sixteen wide column">
+        <div id="chart" style="height:400px"></div>
+    </div>
+</div>
+
+<script src="/bower_components/echarts/build/dist/echarts.js"></script>
+<script src="/javascripts/config.js"></script>
+<script type="text/javascript">
+
+    // 使用
+    require(['jquery', 'echarts', 'echart_data_loader', 'echarts/chart/line'],
+            function ($, ec, loader) {
+
+                var myChart = ec.init(document.getElementById('chart'));
+
+                var $address = $("#address");
+                var $dataType = $("#dataType");
+                var $start = $("#start");
+                var $end = $("#end");
+
+                var now = new Date();
+                var startDate = new Date();
+                startDate.setDate(now.getDate() - 7);
+
+                $start.val(startDate.toISOString().substring(0, 10));
+                $end.val(now.toISOString().substring(0, 10));
+
+                function getQueryParams() {
+                    var query = {
+                        url : $address.val(),
+                        type: $dataType.val()
+                    };
+                    var startString = $start.val();
+                    var endString = $end.val();
+                    if (startString.length > 0) {
+                        query.start = new Date(startString);
+                    }
+                    if (endString.length > 0) {
+                        var end = new Date(endString);
+                        end.setDate(end.getDate() + 1);
+                        query.end = end;
+                    }
+                    return query;
+                }
+
+                $("#search").click(function () {
+                    loader.load(getQueryParams())
+                            .then(function (eChartOption) {
+                                myChart.clear();
+                                console.log(eChartOption);
+                                // 为echarts对象加载数据
+                                myChart.setOption(eChartOption);
+                            });
+
+                });
+
+            }
+    );
+</script>
+</body>
 </html>
