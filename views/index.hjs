@@ -21,7 +21,7 @@
     <div class="three wide column field">
         <select id="dataType">
             <option value="ResourceSize">资源大小</option>
-            <option value="ImageResource">图片资源</option>
+            <option value="ImageQuantity">图片数量</option>
             <option value="CacheHit">缓存命中</option>
         </select>
     </div>

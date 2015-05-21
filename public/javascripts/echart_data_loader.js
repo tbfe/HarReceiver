@@ -2,27 +2,7 @@
  * @fileOverview 用于获取图表对应的eCharts Option
  * @module echart_data_loader
  */
-define(['lodash', 'data_loader'], function (_, loader) {
-    var DEFAULT_OPTION = {
-        tooltip : {
-            trigger: 'item'
-        },
-        toolbox: {
-            show : true,
-            feature : {
-                restore : {show: true},
-                saveAsImage : {show: true}
-            }
-        },
-        dataZoom: {
-            show: true,
-            start : 70
-        },
-        xAxis  : [{type: 'time'}],
-        yAxis  : [{type: 'value'}]
-    };
-
-
+define(['lodash', 'data_loader', 'default_echart_option', 'image_sources_parser'], function (_, loader, defaultOption, imageParser) {
     /**
      *
      * @param {string} property
@@ -51,7 +31,7 @@ define(['lodash', 'data_loader'], function (_, loader) {
      * @returns {Object}
      */
     function generateOption(seriesList, data) {
-        var option = _.extend({}, DEFAULT_OPTION);
+        var option = _.extend({}, defaultOption);
         option.legend = {
             data: seriesList
         };
@@ -68,6 +48,7 @@ define(['lodash', 'data_loader'], function (_, loader) {
             var option = generateOption([
                 'body',
                 'header',
+                'document.content',
                 'js.body',
                 'js.header',
                 'js.content',
@@ -83,22 +64,6 @@ define(['lodash', 'data_loader'], function (_, loader) {
                     + (params.value[1] / 1000).toFixed(2) + "KB"
             };
             return option;
-        },
-        ImageResource: function (data) {
-            var domainStatics = {};
-            var legendData = [];
-            data.forEach(function (item, index) {
-                 item.domains.forEach(function (domainData) {
-                     var domainName = domainData.domain;
-                     if (domainStatics[domainName]) {
-                         domainStatics[domainName] = [];
-                         legendData.push(domainName);
-                     }
-                     domainStatics[domainName][index] = domainData;
-                 })
-             });
-
-            throw new Error("Unsupported Operation Error.");
         },
         CacheHit: function (data) {
             var option = generateOption([
@@ -124,6 +89,11 @@ define(['lodash', 'data_loader'], function (_, loader) {
         }
     };
 
+    _.extend(optionsParsers, imageParser);
+
+    var PARSER_TO_MODEL = {
+        ImageQuantity: "ImageResource"
+    };
 
     /**
      * 获取数据
@@ -135,9 +105,15 @@ define(['lodash', 'data_loader'], function (_, loader) {
      * @returns {Promise}
      */
     function load(params) {
+
+        var parserType = params.type;
+        if (PARSER_TO_MODEL[parserType]) {
+            params.type = PARSER_TO_MODEL[parserType];
+        }
+
         return loader.load(params)
             .then(function (data) {
-                var parser = optionsParsers[params.type];
+                var parser = optionsParsers[parserType];
                 return parser(data);
             });
     }
