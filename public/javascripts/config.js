@@ -1,4 +1,3 @@
-// Â·¾¶ÅäÖÃ
 require.config({
     baseUrl: "/javascripts",
     paths: {

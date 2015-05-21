@@ -41,7 +41,7 @@ router.get('/', function(req, res, next) {
         }
 
         model.find(queryObject).exec(function (err, data) {
-            res.json(200, data);
+            res.status(200).json(data);
         });
     } else {
         res.status(400).render('error', {
